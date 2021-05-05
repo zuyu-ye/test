@@ -17,18 +17,18 @@ bot.listen('/', process.env.PORT, () => {
 bot.on('message', async event => {
   if (event.message.type === 'text') {
     try {
-      const response = await axios.get('https://datacenter.taichung.gov.tw/swagger/OpenData/f116d1db-56f7-4984-bad8-c82e383765c0')
+      const response = await axios.get('https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=17')
       const data = response.data.filter(data => {
-        return data['花種'] === event.message.text
+        return data.title === event.message.text
       })
 
       let reply = ''
-      for (const d of data) {
-        reply += `地點:${d['地點']} \n地址:${d['地址']} \n觀賞時期:${d['觀賞時期']} \n \n`
+      for (const d of data.showInfo) {
+        reply += `location:${d.location} \nlocationName:${d.locationName} \ntime:${d.time} \n \n`
       }
       event.reply(reply)
     } catch (error) {
-      event.reply('發生錯誤')
+      event.reply('查詢失敗，重新輸入關鍵字')
     }
   }
 })
